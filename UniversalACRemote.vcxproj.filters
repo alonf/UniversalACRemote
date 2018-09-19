@@ -122,8 +122,5 @@
     <ClCompile Include="IRTadiran.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ACElectraController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

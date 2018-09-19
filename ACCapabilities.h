@@ -31,18 +31,18 @@ enum class ACCapabilities : unsigned int
 
 inline ACCapabilities operator | (ACCapabilities lhs, ACCapabilities rhs)
 {
-    return static_cast<ACCapabilities>(static_cast<ACCapabilities>(lhs) | static_cast<ACCapabilities>(rhs));
+    return static_cast<ACCapabilities>(static_cast<unsigned int>(lhs) | static_cast<unsigned int>(rhs));
 }
 
 inline ACCapabilities& operator |= (ACCapabilities& lhs, ACCapabilities rhs)
 {
-    lhs = static_cast<ACCapabilities>(static_cast<ACCapabilities>(lhs) | static_cast<ACCapabilities>(rhs));
+    lhs = static_cast<ACCapabilities>(static_cast<unsigned int>(lhs) | static_cast<unsigned int>(rhs));
     return lhs;
 }
 
 inline bool operator & (ACCapabilities lhs, ACCapabilities rhs)
 {
-    const bool result = (static_cast<int>(lhs) & static_cast<int>(rhs)) != 0;
+    const bool result = (static_cast<unsigned int>(lhs) & static_cast<unsigned int>(rhs)) != 0;
     return result;
 }
 

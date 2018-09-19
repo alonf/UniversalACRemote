@@ -17,23 +17,26 @@ private:
     IRTadiran _irTadiran;
 
 public:
-    const ACCapabilities Capabilities =
-        ACCapabilities::IsStandardOnOff |
-        ACCapabilities::HasFanModeTurbo |
-        ACCapabilities::HasFanModeHigh |
-        ACCapabilities::HasFanModeMedium |
-        ACCapabilities::HasFanModeLow |
-        ACCapabilities::HasFanModeAuto |
-        ACCapabilities::HasACModeCool |
-        ACCapabilities::HasACModeHeat |
-        ACCapabilities::HasACModeHumid |
-        ACCapabilities::HasACModeRecycle |
-        ACCapabilities::HasACModeFan |
-        ACCapabilities::HasSwingOnOff |
-        ACCapabilities::HasSleepMode |
-        ACCapabilities::HasOnOffLight |
-        ACCapabilities::HasOnOffXFan |
-        ACCapabilities::HasExtendedSwingMode;
+    static ACCapabilities GetCapabilities()
+    {
+        return
+            ACCapabilities::IsStandardOnOff |
+            ACCapabilities::HasFanModeTurbo |
+            ACCapabilities::HasFanModeHigh |
+            ACCapabilities::HasFanModeMedium |
+            ACCapabilities::HasFanModeLow |
+            ACCapabilities::HasFanModeAuto |
+            ACCapabilities::HasACModeCool |
+            ACCapabilities::HasACModeHeat |
+            ACCapabilities::HasACModeHumid |
+            ACCapabilities::HasACModeRecycle |
+            ACCapabilities::HasACModeFan |
+            ACCapabilities::HasSwingOnOff |
+            ACCapabilities::HasSleepMode |
+            ACCapabilities::HasOnOffLight |
+            ACCapabilities::HasOnOffXFan |
+            ACCapabilities::HasExtendedSwingMode;
+    }
 
     explicit ACTadiranController() : _irsend(IRLED), _irTadiran(&_irsend) {}
 

@@ -35,7 +35,7 @@ private:
 #error("One AC type must be defined")
 #endif
 
-    ACController_t *_acController;
+    ACController_t _acController;
 
 public:
 
@@ -66,29 +66,22 @@ public:
 	void OnButtonPressed();
 
     void SendState(ACState acState);
-    bool IsPowerOn() const { return _acController->IsPowerOn(); }
-    ACMode GetACMode() const { return _acController->GetACMode(); }
-    ACFan GetACfan() const { return _acController->GetACfan(); }
-    bool IsSwingModeOn() const { return _acController->IsSwingModeOn(); }
-    bool IsSleepModeOn() const { return _acController->IsSleepModeOn(); }
-    bool IsiFellModeOn() const { return _acController->IsiFeelModeOn(); }
-    ACExtendedSwingMode GetACExtendedSwingMode() const { return _acController->GetExtendedSwingMode(); }
-    bool IsXFanOn() const { return _acController->IsXFanOn(); }
-    bool IsLightOn() const { return _acController->IsLightOn(); }
+    bool IsPowerOn() const { return _acController.IsPowerOn(); }
+    ACMode GetACMode() const { return _acController.GetACMode(); }
+    ACFan GetACfan() const { return _acController.GetACfan(); }
+    bool IsSwingModeOn() const { return _acController.IsSwingModeOn(); }
+    bool IsSleepModeOn() const { return _acController.IsSleepModeOn(); }
+    bool IsiFellModeOn() const { return _acController.IsiFeelModeOn(); }
+    ACExtendedSwingMode GetACExtendedSwingMode() const { return _acController.GetExtendedSwingMode(); }
+    bool IsXFanOn() const { return _acController.IsXFanOn(); }
+    bool IsLightOn() const { return _acController.IsLightOn(); }
     ACState GetACState() const;
-    ACCapabilities GetCapabilities() const
-    {
-        Serial.write("GetCapabilities address: ");
-        Serial.write((int)_acController);
-        Serial.write("     ************\n");
-        return _acController->GetCapabilities();
-    }
+    ACCapabilities GetCapabilities() const { return _acController.GetCapabilities();}
 	void Loop() override {}
 
 private:
 	ACState _acStatus;
 };
-
 
 typedef std::shared_ptr<ACManager> ACManagerPtr_t;
 #endif

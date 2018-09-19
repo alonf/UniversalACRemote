@@ -3,10 +3,9 @@
 
 #ifndef _CONFIGURATION_h
 #define _CONFIGURATION_h
-#include "ACCapabilities.h"
 
-#define ELECTRA
-//#define TADIRAN
+//#define ELECTRA
+#define TADIRAN
 
 //Wifi Configuration
 static const char *SSID = "ACIoT"; //The default configuration access point ssid

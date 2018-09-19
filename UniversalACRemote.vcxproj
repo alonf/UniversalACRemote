@@ -132,7 +132,6 @@
     <ClInclude Include="__vm\.UniversalACRemote.vsarduino.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ACElectraController.cpp" />
     <ClCompile Include="ACManager.cpp" />
     <ClCompile Include="ConfigurationManager.cpp" />
     <ClCompile Include="DHTReader.cpp" />

@@ -77,7 +77,7 @@ void SetupWebServer()
     deviceSettings->longButtonPeriod = configurationManger->GetLongPeriodButonPressTimesMilliSeconds();
     deviceSettings->veryLongButtonPeriod = configurationManger->GetVeryLongPeriodButonPressTimesMilliSeconds();
     Serial.write("3 ********************\n");
-    webServer = WebServer::Create(wifiManager, 80, appKey, move(deviceSettings), UpdateACState, GetACState, ACCapabilities::HasSleepMode /* acManager->GetCapabilities()*/);
+    webServer = WebServer::Create(wifiManager, 80, appKey, move(deviceSettings), UpdateACState, GetACState, acManager->GetCapabilities());
     Serial.write("4 ********************\n");
     webServer->SetWebSiteHeader(String(webSiteHeader));
     webServer->SetUpdateConfiguration([](const DeviceSettings& deviceSettings)

@@ -19,14 +19,13 @@ public:
     
 private:
     ACState _state {};
-   //TRealACController _acController {};
+   TRealACController _acController {};
 
 public:
-    ACController() { Serial.write("ACController *************\n"); }
     void SendAc(const ACState &acState)
     {
         _state = acState;
-        TRealACController::SendAc(_state);
+        _acController.SendAc(_state);
     }
 
     bool IsPowerOn() const { return _state.isPowerOn; }
@@ -41,8 +40,8 @@ public:
     ACExtendedSwingMode GetExtendedSwingMode() const { return _state.extendedSwing; }
     ACState GetACState() const { return _state; }
 
-    ACCapabilities GetCapabilities() const { return TRealACController::Capabilities; }
-    void Initialize() { TRealACController::Initialize(); }
+    ACCapabilities GetCapabilities() const { return TRealACController::GetCapabilities(); }
+    void Initialize() { _acController.Initialize(); }
 };
 
 #endif //ACCONTROLLER

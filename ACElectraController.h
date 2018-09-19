@@ -10,35 +10,37 @@ class ACElectraController
 {
     typedef ACController<ACElectraController> Controller_t;
 private:
-    static IRsend *_irsend;
-    static IRelectra *_irElectra;
-    static bool _powerState;// = false;
+    IRsend _irsend;
+    IRelectra _irElectra;
+    bool _powerState = false;
     
 public:
-    static ACCapabilities Capabilities;/* =
-        ACCapabilities::IsOnOffToggle |
-        ACCapabilities::HasFanModeHigh |
-        ACCapabilities::HasFanModeMedium |
-        ACCapabilities::HasFanModeLow |
-        ACCapabilities::HasFanModeAuto |
-        ACCapabilities::HasACModeCool |
-        ACCapabilities::HasACModeHeat |
-        ACCapabilities::HasACModeDry |
-        ACCapabilities::HasACModeFan |
-        ACCapabilities::HasACModeAuto |
-        ACCapabilities::HasSwingOnOff |
-        ACCapabilities::HasSleepMode;*/
 
-    static void Initialize()
+    ACElectraController() : _irsend(IRLED), _irElectra(&_irsend) {}
+    static ACCapabilities GetCapabilities()
     {
-        _irsend = new IRsend(IRLED);
-        _irsend->begin();
-        _irElectra = new IRelectra(_irsend);
+        return
+            ACCapabilities::IsOnOffToggle |
+            ACCapabilities::HasFanModeHigh |
+            ACCapabilities::HasFanModeMedium |
+            ACCapabilities::HasFanModeLow |
+            ACCapabilities::HasFanModeAuto |
+            ACCapabilities::HasACModeCool |
+            ACCapabilities::HasACModeHeat |
+            ACCapabilities::HasACModeDry |
+            ACCapabilities::HasACModeFan |
+            ACCapabilities::HasACModeAuto |
+            ACCapabilities::HasSwingOnOff |
+            ACCapabilities::HasSleepMode;
+    }
 
+    void Initialize()
+    {
+        _irsend.begin();
         Serial.println("ACElectraController begins...");
     };
 
-    static void SendAc(ACState state)
+    void SendAc(ACState state)
     {
         const IRElectraSwing swing = state.isSwingOn ? IRElectraSwing::On : IRElectraSwing::Off;
         const IRElectraPower power = state.isPowerOn != _powerState ? IRElectraPower::OnOffToggle : IRElectraPower::None;
@@ -84,9 +86,7 @@ public:
             default:
                 mode = IRElectraMode::Auto;
         }
-        _irElectra->SendElectra(power, mode, fan, state.temperature, swing, sleep, iFeel);
+        _irElectra.SendElectra(power, mode, fan, state.temperature, swing, sleep, iFeel);
     }
-   
-    
 };
 #endif //ACELECTRACONTROLLER
