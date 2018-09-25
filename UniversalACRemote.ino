@@ -41,6 +41,7 @@
 #include "Configuration.h"
 #include "PushButtonManager.h"
 #include "ACManager.h"
+#include "DHTReader.h"
 
 using namespace std;
 
@@ -54,6 +55,7 @@ ACManagerPtr_t acManager;
 ArduinoLoopManager_t loopManager;
 ConfigurationManager_t configurationManger;
 WebServerPtr_t webServer;
+DHTReader dhtReader;
 
 void UpdateACState(const ACState& acState)
 {
@@ -62,24 +64,24 @@ void UpdateACState(const ACState& acState)
 
 ACState GetACState()
 {
-    return acManager->GetACState();
+    auto acState = acManager->GetACState();
+    acState.roomTemperature = dhtReader.ReadTemperature();
+    acState.roomHumidity = dhtReader.ReadHumidity();
+
+    return acState;
 }
 
 void SetupWebServer()
 {
-    Serial.write("1 ********************\n");
     auto deviceSettings = unique_ptr<DeviceSettings>(new DeviceSettings());
-    Serial.write("2 ********************\n");
     deviceSettings->isFactoryReset = false;
     deviceSettings->ssidName = configurationManger->GetSSID();
     deviceSettings->accessPointPassword = configurationManger->GetAccessPointPassword();
     deviceSettings->ACNameStr = configurationManger->GetACName();
     deviceSettings->longButtonPeriod = configurationManger->GetLongPeriodButonPressTimesMilliSeconds();
     deviceSettings->veryLongButtonPeriod = configurationManger->GetVeryLongPeriodButonPressTimesMilliSeconds();
-    Serial.write("3 ********************\n");
     webServer = WebServer::Create(wifiManager, 80, appKey, move(deviceSettings), UpdateACState, GetACState, acManager->GetCapabilities());
-    Serial.write("4 ********************\n");
-    webServer->SetWebSiteHeader(String(webSiteHeader));
+    webServer->SetWebSiteHeader(String("Welcome to ") + configurationManger->GetACName() + " setup page.");
     webServer->SetUpdateConfiguration([](const DeviceSettings& deviceSettings)
     {
         if (deviceSettings.isFactoryReset)

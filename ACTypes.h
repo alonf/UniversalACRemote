@@ -39,6 +39,8 @@ enum class ACExtendedSwingMode
 struct ACState
 {
     bool isPowerOn = true;
+    int roomTemperature = 24;
+    int roomHumidity = 70;
     ACMode mode = ACMode::Auto;
     ACFan fan = ACFan::Auto;
     int temperature = 24;
@@ -48,6 +50,7 @@ struct ACState
     bool isXfanOn = false;
     bool isLightOn = false;
     ACExtendedSwingMode extendedSwing = ACExtendedSwingMode::Off;
+    
 };
 
 #endif //#define ACTYPES

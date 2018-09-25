@@ -20,7 +20,6 @@ public:
     static ACCapabilities GetCapabilities()
     {
         return
-            ACCapabilities::IsOnOffToggle |
             ACCapabilities::HasFanModeHigh |
             ACCapabilities::HasFanModeMedium |
             ACCapabilities::HasFanModeLow |
@@ -31,7 +30,8 @@ public:
             ACCapabilities::HasACModeFan |
             ACCapabilities::HasACModeAuto |
             ACCapabilities::HasSwingOnOff |
-            ACCapabilities::HasSleepMode;
+            ACCapabilities::HasSleepMode |
+            ACCapabilities::HasiFeelMode;
     }
 
     void Initialize()

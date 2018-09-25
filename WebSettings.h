@@ -1,6 +1,7 @@
-﻿#include <String>
+﻿
 #ifndef _WEBSETTINGSTEMPLATE_h
 #define _WEBSETTINGSTEMPLATE_h
+#include <String>
 
 const static char WebSettingHtmlTemplate[] PROGMEM = R"(
 <html xmlns="http://www.w3.org/1999/xhtml"><head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/> <title>Air Conditioner Controller Setup</title><link rel="stylesheet" type="text/css" href="view.css" media="all"><script src="ap_script.js"></script></head><body class="no_guidelines safari" onload="add_ap() "> <div id="form_container"> <h1><a>Fliess's AC Web Controller Setup</a></h1> <form id="set-access-point" class="appnitro" method="post" action="setconfiguration"> <div class="form_description"> <p>These values will be saved on the device eeprom. eeprom reset: press the button for 20 seconds.</p></div><ul> <li class="section_break"> <h3>Router Settings</h3> <p> On submit the device will reboot and will try to connect to the chosen network. The green Led light will blink the IP Address. </p></li><li> <label class="dsc">Choose WiFi Network:</label><span id="AP"> </span> </li><li> <label class="dsc">WiFi Password </label> <div> <input name="WFPwd" type="password" maxlength="64" value="<%=WFPwd%>"/> </div></li><li> <label class="dsc">Air Conditioner Name: </label> <div> <input name="ACName" class="element text medium" type="text" size="160" maxlength="255" value="<%=ACNameStr%>"/> </div></li><li class="section_break"> <h3>Push Button settings</h3> </li><li> <label class="dsc">Long press period </label> <div> <input name="PBLng" class="element text medium" type="number" min="1000" value="<%=PBLng%>"/> </div></li><li> <label class="dsc">Very long press period </label> <div> <input name="PBVLng" class="element text medium" type="number" min="1500" value="<%=PBVLng%>"/> </div></li><li class="buttons"> <input type="submit" name="submit" class="button_text" value="Submit"/> </li></ul> </form> </div></body></html>
@@ -391,7 +392,7 @@ input.button_text
 }
 
 /**** Inputs and Labels ****/
-label.dsc
+label.description
 {
 	border:none;
 	color:#222;
@@ -410,7 +411,7 @@ span.symbol
 
 input.text
 {
-	background:#fff  top;
+	background:#fff url('data:image/gif;base64,R0lGODlhBwACAIABAMzMzP///yH5BAEAAAEALAAAAAAHAAIAAAIFhA+hGwUAOw==') repeat-x top;
 	border-bottom:1px solid #ddd;
 	border-left:1px solid #c3c3c3;
 	border-right:1px solid #c3c3c3;
@@ -431,7 +432,7 @@ input.file
 
 textarea.textarea
 {
-	background:#fff;
+	background:#fff url('data:image/gif;base64,R0lGODlhBwACAIABAMzMzP///yH5BAEAAAEALAAAAAAHAAIAAAIFhA+hGwUAOw==') repeat-x top;
 	border-bottom:1px solid #ddd;
 	border-left:1px solid #c3c3c3;
 	border-right:1px solid #c3c3c3;
@@ -449,7 +450,7 @@ select.select
 	font-size:100%;
 	margin:1px 0;
 	padding:1px 0 0;
-	background:#fff;
+	background:#fff url('data:image/gif;base64,R0lGODlhBwACAIABAMzMzP///yH5BAEAAAEALAAAAAAHAAIAAAIFhA+hGwUAOw==') repeat-x top;
 	border-bottom:1px solid #ddd;
 	border-left:1px solid #c3c3c3;
 	border-right:1px solid #c3c3c3;

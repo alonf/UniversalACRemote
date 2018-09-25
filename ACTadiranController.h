@@ -20,7 +20,6 @@ public:
     static ACCapabilities GetCapabilities()
     {
         return
-            ACCapabilities::IsStandardOnOff |
             ACCapabilities::HasFanModeTurbo |
             ACCapabilities::HasFanModeHigh |
             ACCapabilities::HasFanModeMedium |
@@ -32,7 +31,6 @@ public:
             ACCapabilities::HasACModeRecycle |
             ACCapabilities::HasACModeFan |
             ACCapabilities::HasSwingOnOff |
-            ACCapabilities::HasSleepMode |
             ACCapabilities::HasOnOffLight |
             ACCapabilities::HasOnOffXFan |
             ACCapabilities::HasExtendedSwingMode;
@@ -47,7 +45,7 @@ public:
         Serial.println("ACTadiranController begins...");
     };
 
-    void SendAc(ACState state)
+    void SendAc(const ACState &state)
     {
         //const IRTadiranSwing swing = state.isSwingOn ? IRTadiranSwing::OnFull : IRTadiranSwing::Off;
         const IRTadiranPower power = state.isPowerOn ? IRTadiranPower::On : IRTadiranPower::Off;

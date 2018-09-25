@@ -17,22 +17,17 @@ public:
 	template<typename... Args>
 	static std::shared_ptr<T> Create(Args&&... args)
 	{
-        Serial.write("New 0)***************");
 		auto instance = _instance.lock();
 		if (!instance)
 		{
-            Serial.write("New 1)***************");
 			// ReSharper disable CppSmartPointerVsMakeFunction
 			instance = std::shared_ptr<T>(new T(std::forward<Args>(args)...));
 			// ReSharper restore CppSmartPointerVsMakeFunction
 			_instance = instance;
-            Serial.write("New 2)***************");
 
 			//support after ctor initialization
 			instance->Intialize(instance);
-            Serial.write("New 3)***************");
 		}
-        Serial.write("New 4)***************");
 		return instance;
 	}
 

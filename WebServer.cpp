@@ -19,7 +19,9 @@ WebServer::WebServer(WiFiManagerPtr_t wifiManager, int port, const char *appKey,
 {
 	_server.on("/", [this]() { HandleError(); });
 	_server.on((_authorizedUrl + "/view.css").c_str(), [this]() { HandleSendViewCSS(); });
+    _server.on("/view.css", [this]() { HandleSendViewCSS(); });
 	_server.on((_authorizedUrl + "/ap_script.js").c_str(), [this]() { HandleSendAPScript(); });
+    _server.on("/ap_script.js", [this]() { HandleSendAPScript(); });
 	_server.on((_authorizedUrl + "/aplist.html").c_str(), [this]() { HandleSendAPList(); });
 	_server.on((_authorizedUrl + "/setup").c_str(), [this]() { HandleSetup(); });
 	_server.on((_authorizedUrl + "/setconfiguration").c_str(),HTTP_POST, [this]() { HandleSetConfiguration(); });
@@ -65,9 +67,9 @@ bool WebServer::CheckSecurity()
 	return result;
 }
 
-bool WebServer::GetServerArgBoolValue(const String &argName, ACCapabilities capability)
+bool WebServer::GetServerArgBoolValue(const String &argName, ACCapabilities capability /*= ACCapabilities::None*/)
 {
-    if (!(capability & _acCapabilities)) //check only if the current air condition has this capability
+    if (capability != ACCapabilities::None && !(capability & _acCapabilities)) //check only if the current air condition has this capability
         return false;
 
 	auto argText = _server.arg(argName);
@@ -81,7 +83,7 @@ void WebServer::SendACState()
 		return;
 	
 	ACState state;
-	state.isPowerOn = GetServerArgBoolValue("IsPowerToggle", ACCapabilities::IsOnOffToggle);
+	state.isPowerOn = GetServerArgBoolValue("IsPowerOn");
 	state.isSwingOn = GetServerArgBoolValue("IsSwingOn", ACCapabilities::HasSwingOnOff);
 	state.isSleepModeOn = GetServerArgBoolValue("IsSleepOn", ACCapabilities::HasSleepMode);
 	state.isiFeelModeOn = GetServerArgBoolValue("IsiFeelOn", ACCapabilities::HasiFeelMode);
@@ -204,7 +206,7 @@ void WebServer::SetACState()
 	Serial.printf("%s\n", body.c_str());
 
 	ACState state;
-	state.isPowerOn = json["isPowerToggle"].equalsIgnoreCase("true");
+	state.isPowerOn = json["isPowerOn"].equalsIgnoreCase("true");
 	Serial.printf("isPowerOn: %d\n", state.isPowerOn);
 
     if (_acCapabilities & ACCapabilities::HasSwingOnOff)
@@ -252,7 +254,7 @@ void WebServer::SetACState()
 
     if (_acCapabilities & ACCapabilities::HasExtendedSwingMode)
     {
-        auto extendedSwingMode = json["ExtendedSwingMode"];
+        auto extendedSwingMode = json["extendedSwingMode"];
         extendedSwingMode.toUpperCase();
         state.extendedSwing = _ACText2ExtendedSwingModeMap[extendedSwingMode];
         Serial.printf("extendedSwingMode: %s\n", extendedSwingMode.c_str());
@@ -269,12 +271,12 @@ void WebServer::HandleGetCurrentTemperature()
 {
 	if (!CheckSecurity())
 		return;
-
-	auto temperature = _dhtReader.ReadTemperature();
+    const auto state = GetCurrentACState();
+    const auto temperature = state.roomTemperature;
 	char tempstr[16];
 	dtostrf(temperature, 2, 1, tempstr);
 
-	String json = String(R"({ "temperature" : ")") + tempstr + R"("})";
+    const String json = String(R"({ "temperature" : ")") + tempstr + R"("})";
 	_server.send(200, "application/json", json);
 }
 
@@ -292,69 +294,76 @@ void WebServer::GetACState()
 	}
 
 	//Get it from the registered AC manager
-	auto state = GetCurrentACState();
+    const auto state = GetCurrentACState();
     String result = "{";
-    result += R"("isPowerOn : )";
+    result += R"("isPowerOn" : )";
     result += state.isPowerOn ? "true" : "false";
 
-    result += R"(",)";
-    result += R"("mode : )";
+    result += ", ";
+    result += R"("mode" : ")";
     result += _ACMode2TextMap[state.mode];
 
-    result += R"(",)";
-    result += R"("fan : )";
+    result += R"(", )";
+    result += R"("fan" : ")";
     result += _ACFan2TextMap[state.fan];
 
-    result += R"(",)";
-    result += R"("temperature : )";
+    result += R"(", )";
+    result += R"("temperature" : )";
     result += state.temperature;
+
+    result += R"(, )";
+    result += R"("roomTemperature" : )";
+    result += state.roomTemperature;
+
+    result += R"(, )";
+    result += R"("roomHumidity" : )";
+    result += state.roomHumidity;
 
     if (_acCapabilities & ACCapabilities::HasExtendedSwingMode)
     {
-        result += R"(",)";
-        result += R"("ExtendedSwingMode : )";
+        result += R"(, )";
+        result += R"("extendedSwingMode" : ")";
         result += _ACExtendedSwingMode2TextMap[state.extendedSwing];
+        result += R"(")";
     }
 
     if (_acCapabilities & ACCapabilities::HasSwingOnOff)
     {
-        result += R"(",)";
-        result += R"("isSwingOn : )";
+        result += ",";
+        result += R"("isSwingOn" : )";
         result += state.isSwingOn ? "true" : "false";
     }
 
     if (_acCapabilities & ACCapabilities::HasSleepMode)
     {
-        result += R"(",)";
-        result += R"("isSleepModeOn : )";
+        result += ",";
+        result += R"("isSleepModeOn" : )";
         result += state.isSleepModeOn ? "true" : "false";
     }
 
     if (_acCapabilities & ACCapabilities::HasiFeelMode)
     {
-        result += R"(",)";
-        result += R"("isiFeelOn : )";
+        result += ",";
+        result += R"("isiFeelOn" : )";
         result += state.isiFeelModeOn ? "true" : "false";
     }
 
     if (_acCapabilities & ACCapabilities::HasOnOffXFan)
     {
-        result += R"(",)";
-        result += R"("isXFanOn : )";
+        result += ",";
+        result += R"("isXFanOn" : )";
         result += state.isXfanOn ? "true" : "false";
     }
 
     if (_acCapabilities & ACCapabilities::HasOnOffLight)
     {
-        result += R"(",)";
-        result += R"("isLighOn : )";
+        result += ",";
+        result += R"("isLighOn" : )";
         result += state.isLightOn ? "true" : "false";
     }
 
-    auto json = result + R"("})";
+    const auto json = result + "}";
 
-
-	
 	_server.send(200, "application/json", json);
 }
 
@@ -408,11 +417,14 @@ void WebServer::ProcessHTTPACView()
 	}
 
 	//Get it from the registered AC manager
-	auto state = GetCurrentACState();
+    const auto state = GetCurrentACState();
 
 	Util::StringMap valueMap;
 	valueMap["ApiKey"] = ApiKey;
 	valueMap["Title"] = _deviceSettings->ACNameStr;
+    valueMap["RoomTemperature"] = String(state.roomTemperature);
+    valueMap["RoomHumidity"] = String(state.roomHumidity);
+
     if (_acCapabilities & ACCapabilities::HasACModeAuto)
 	    valueMap["ACModeAuto"] = state.mode == ACMode::Auto ? R"(checked="checked")" : "";
 
@@ -461,10 +473,10 @@ void WebServer::ProcessHTTPACView()
         valueMap["iFeel"] = state.isiFeelModeOn ? R"(checked="checked")" : "";
 
     if (_acCapabilities & ACCapabilities::HasOnOffXFan)
-        valueMap["XFan"] = state.isiFeelModeOn ? R"(checked="checked")" : "";
+        valueMap["XFan"] = state.isXfanOn ? R"(checked="checked")" : "";
 
     if (_acCapabilities & ACCapabilities::HasOnOffLight)
-        valueMap["light"] = state.isLightOn ? R"(checked="checked")" : "";
+        valueMap["Light"] = state.isLightOn ? R"(checked="checked")" : "";
 
     if (_acCapabilities & ACCapabilities::HasExtendedSwingMode)
     {
@@ -542,7 +554,7 @@ void WebServer::PopulateHTMLSetupFromTemplate(const String &htmlTemplate, const 
 	//setup template processing variables
 	int templateIndex = 0;
 	int templateBufferIndex = 0;
-	int templateEnd = -1;
+    const int templateEnd = -1;
 	memset(_htmlBuffer, 0, sizeof(_htmlBuffer)); //clear the html result buffer
 
 	int yieldTime = millis();
@@ -555,7 +567,7 @@ void WebServer::PopulateHTMLSetupFromTemplate(const String &htmlTemplate, const 
 		}
 
 		Serial.printf("Continue setup template processing, index: %d\n", templateIndex);
-		int beginVariable = htmlTemplate.indexOf('%', templateIndex); //search <%= by searching %
+	    const int beginVariable = htmlTemplate.indexOf('%', templateIndex); //search <%= by searching %
 		int endVariable = -1;
 		if (beginVariable >= 0) //only if beginVariable didn't reach the end of html
 			endVariable = htmlTemplate.indexOf('%', beginVariable + 1);
@@ -609,7 +621,7 @@ void WebServer::HandleSetConfiguration()
 		html += " seconds. The two leds should blink very fast.";
 
 		SendBackHtml(html.c_str());
-		_configurationUpdater(*_deviceSettings.get());
+		_configurationUpdater(*_deviceSettings);
 		Util::software_Reboot();
 }
 
@@ -623,7 +635,7 @@ void WebServer::HandleResetAccessPoint()
 		html += "</p>";
 
 	SendBackHtml(html.c_str());
-	_configurationUpdater(*_deviceSettings.get()); //this will reset the device
+	_configurationUpdater(*_deviceSettings); //this will reset the device
 }
 
 bool WebServer::IsConnected() const

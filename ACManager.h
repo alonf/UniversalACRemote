@@ -14,6 +14,8 @@
 #include "ACElectraController.h"
 #elif defined(TADIRAN)
 #include "ACTadiranController.h"
+#elif defined (TADIRANTAC290)
+#include "ACTadiranTac290Controller.h"
 #else
 #error("One AC type must be defined")
 #endif
@@ -30,7 +32,9 @@ private:
 #ifdef ELECTRA
     typedef ACController<ACElectraController> ACController_t;
 #elif defined(TADIRAN)
-    typedef ACController<ACTadiranController> ACController_t; //TODO; replace with tadiran
+    typedef ACController<ACTadiranController> ACController_t; 
+#elif defined (TADIRANTAC290)
+    typedef ACController<ACTadiranTac290Controller> ACController_t;
 #else
 #error("One AC type must be defined")
 #endif

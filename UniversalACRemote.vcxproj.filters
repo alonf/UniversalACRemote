@@ -87,6 +87,12 @@
     <ClInclude Include="ACController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="IRTadiranTac290.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ACTadiranTac290Controller.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ACManager.cpp">
@@ -120,6 +126,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="IRTadiran.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IRTadiranTac290.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

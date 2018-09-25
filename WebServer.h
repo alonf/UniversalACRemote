@@ -15,39 +15,26 @@
 #include "PubSub.h"
 #include "ArduinoLoopManager.h"
 #include "Util.h"
-#include "DHTReader.h"
 #include "ACTypes.h"
 #include "ACCapabilities.h"
 
 struct DeviceSettings
 {
-	bool isFactoryReset;
+	bool isFactoryReset{};
 	String ssidName;
 	String accessPointPassword;
 	String ACNameStr;
-	unsigned int longButtonPeriod;
-	unsigned int veryLongButtonPeriod;
+	unsigned int longButtonPeriod{};
+	unsigned int veryLongButtonPeriod{};
 };
-
-class P
-{
-public:
-    P(int i = 0)
-    {
-        Serial.write(i);
-        Serial.write(")************* :( :(\n");
-    }
-};
-
-
 
 typedef std::function<void(const String&, int)> WebNotificationPtr_t;
 class WebServer : public Singleton<WebServer>, public IProcessor
 {
 	friend class Singleton<WebServer>;
 private:
-    P p {};
-	char _htmlBuffer[3600]{}; //for setup html result
+	//char _htmlBuffer[3600]{}; //for setup html result
+    char _htmlBuffer[6200]{}; //for setup html result
 	std::unique_ptr<DeviceSettings> _deviceSettings{};
 	ESP8266WebServer _server;
 	PubSub<WebServer, const String&, int> _pubsub;
@@ -55,7 +42,6 @@ private:
 	const String _authorizedUrl;
 	bool _isInit = false;
 	std::function<void(const DeviceSettings&)> _configurationUpdater;
-	DHTReader _dhtReader;
 
 	Util::StringMap _templateValuesMap;
     Util::Map<String, ACMode> _ACText2ModeMap = { {"AUTO", ACMode::Auto}, {"COOL", ACMode::Cool}, {"HEAT", ACMode::Heat}, {"FAN", ACMode::Fan}, {"DRY", ACMode::Dry}, { "HUMID", ACMode::Humid },{ "RECYCLE", ACMode::Recycle } };
@@ -69,7 +55,7 @@ private:
 	void UpdateStatus(ConnectionStatus status);
 	std::function<ACState()> GetCurrentACState;
 	String CreateUrl(const String &s) const;
-	bool GetServerArgBoolValue(const String &argName, ACCapabilities capability);
+	bool GetServerArgBoolValue(const String &argName, ACCapabilities capability = ACCapabilities::None);
 	void ProcessHTTPACView();
 	std::function<void(const ACState &)> UpdateACState;
 
