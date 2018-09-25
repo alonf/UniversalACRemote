@@ -37,7 +37,10 @@ ACState ACManager::GetACState() const
 }
 void ACManager::OnButtonPressed()
 {
-	SendState(ACState()); //default values are what we need
+    ACState state; // Sen default, but toggle power
+    state.isPowerOn = !IsPowerOn(); //toggle power state
+
+    SendState(state); //default values are what we need
 }
 
 

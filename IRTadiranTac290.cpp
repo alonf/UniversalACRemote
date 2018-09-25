@@ -26,6 +26,8 @@ bool IRTadiranTac290::SendTadiranTac290(IRTadiranTac290Power power, IRTadiranTac
     EncodeTadiranTac290(&signal[2], power, mode, fan, temperature);
     //Repeat the code
     memcpy(signal + 132, signal, 131 * sizeof(uint16_t));
+
+    /* //Debug
     Serial.println("Tac 290 code:");
     for (unsigned int i = 0; i < 263; ++i)
     {
@@ -33,7 +35,7 @@ bool IRTadiranTac290::SendTadiranTac290(IRTadiranTac290Power power, IRTadiranTac
         Serial.print(',');
     }
     Serial.println();
-
+    */
     _remote->sendRaw(signal, 263, 38);
     return true;
 }
@@ -75,7 +77,9 @@ void IRTadiranTac290::EncodeTadiranTac290(uint16_t *signal, IRTadiranTac290Power
     const auto reversChecksum = ((checksum & 128) >> 7) + ((checksum & 64) >> 5) + ((checksum & 32) << 3) + ((checksum & 16) >> 1) + ((checksum & 8) << 1) + ((checksum & 4) << 3) + ((checksum & 2) << 5) + ((checksum & 1) << 7);
     
     payload |= reversChecksum;
-    DumpBits("checksum", payload);
+
+    //Debug
+    //DumpBits("checksum", payload);
     
     //convert and copy payload to signal
     for (unsigned int i = 0; i < 64; i++)

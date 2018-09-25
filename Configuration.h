@@ -5,23 +5,14 @@
 #define _CONFIGURATION_h
 
 //#define ELECTRA
-//#define TADIRAN
-#define TADIRANTAC290
+#define TADIRAN
+//#define TADIRANTAC290
 
 //Wifi Configuration
 static const char *SSID = "ACIoT"; //The default configuration access point ssid
 static const char *password = "12345678"; //The default configuration access point password - at least 8 chars
 static const char *appKey = "api"; 
-static const char *ApiKey = "{7802286f-5cb1-43a3-b9fa-28b0352216ec}";
-
-
-//Commands
-static const char *ACOnCool24 = "Turn AC On Mode:Cooling Temperature:24";
-static const char *ACOffCool24 = "Turn AC Off";
-static const char *FanModeFast = "Fan Mode: Fast";
-static const char *FanModeMedium = "Fan Mode: Medium";
-static const char *FanModeSlow = "Fan Mode: Slow";
-static const char *FanModeAuto = "Fan Mode: Auto";
+static const char *ApiKey = "{7802286f-5cb1-43a3-b9fa-28b0352216ec}"; //TODO: Move to EPROM
 
 const unsigned int defaultButtonLongTimePeriod = 5000; //5 seconds -> reset
 const unsigned int defaultButtonVeryLongTimePeriod = 20000; //20 seconds -> factory reset
