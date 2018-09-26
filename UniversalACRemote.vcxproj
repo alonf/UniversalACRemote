@@ -155,7 +155,7 @@
   </ImportGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties VM_ADDITIONAL_COMPILER_CPP_FLAGS="" arduino.upload.port="COM7" />
+      <UserProperties VM_ADDITIONAL_COMPILER_CPP_FLAGS="" arduino.upload.port="COM4" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

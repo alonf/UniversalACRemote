@@ -22,8 +22,9 @@ float DHTReader::ReadTemperature()
 			delay(250);
 			continue;
 		}
-		Serial.printf("Temperature is %d\n", static_cast<int>(t));
-		return t;
+		Serial.printf("Temperature reading is %d\n", static_cast<int>(t));
+        Serial.printf("Temperature with calibration value is %d\n", static_cast<int>(t) + temperatureDeltaCalibration);
+		return t + temperatureDeltaCalibration;
 	}
 	return 24; //default in case of an error
 }

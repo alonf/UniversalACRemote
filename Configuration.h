@@ -16,6 +16,7 @@ static const char *ApiKey = "{7802286f-5cb1-43a3-b9fa-28b0352216ec}"; //TODO: Mo
 
 const unsigned int defaultButtonLongTimePeriod = 5000; //5 seconds -> reset
 const unsigned int defaultButtonVeryLongTimePeriod = 20000; //20 seconds -> factory reset
+const int temperatureDeltaCalibration = -4;
 
 //NodeMCU configuration
 const int pushButton = D3; 
