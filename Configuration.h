@@ -5,8 +5,8 @@
 #define _CONFIGURATION_h
 
 //#define ELECTRA
-#define TADIRAN
-//#define TADIRANTAC290
+//#define TADIRAN
+#define TADIRANTAC290
 
 //Wifi Configuration
 static const char *SSID = "ACIoT"; //The default configuration access point ssid

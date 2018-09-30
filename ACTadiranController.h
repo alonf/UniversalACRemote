@@ -93,7 +93,7 @@ public:
             break;
         case ACMode::Auto:
         default:
-            mode = IRTadiranMode::Fan;
+            mode = IRTadiranMode::Cool;
         }
 
         IRTadiranSwing swing {};
@@ -130,7 +130,8 @@ public:
         case ACExtendedSwingMode::OnFullUpper: 
             swing = IRTadiranSwing::OnFullUpper;
             break;
-        default: ;
+        default:
+            swing = IRTadiranSwing::Off;
         }
         _irTadiran.SendTadiran(power, mode, fan, state.temperature, swing, xFan, light);
     }

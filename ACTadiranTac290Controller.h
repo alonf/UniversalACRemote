@@ -35,11 +35,11 @@ public:
         Serial.println("ACTadiranTac290Controller begins...");
     };
 
-    void SendAc(const ACState &state)
+    void SendAc(const ACState &state) const
     {
         const IRTadiranTac290Power power = state.isPowerOn ? IRTadiranTac290Power::On : IRTadiranTac290Power::Off;
-        const IRTadiranTac290Fan fan = state.fan == ACFan::Low ? IRTadiranTac290Fan::Low : IRTadiranTac290Fan::Turbo;
-        const IRTadiranTac290Mode mode = state.mode == ACMode::Cool ? IRTadiranTac290Mode::Cool : IRTadiranTac290Mode::Heat;
+        const IRTadiranTac290Fan fan = state.fan == ACFan::Low ? IRTadiranTac290Fan::Low : IRTadiranTac290Fan::Turbo; //default Turbo
+        const IRTadiranTac290Mode mode = state.mode == ACMode::Heat ? IRTadiranTac290Mode::Heat : IRTadiranTac290Mode::Cool; //default cool
         _irTadiranTac290.SendTadiranTac290(power, mode, fan, state.temperature);
     }
 };
