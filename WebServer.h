@@ -54,13 +54,14 @@ private:
     void SendBackHtml(const String &message);
 	void UpdateStatus(ConnectionStatus status);
 	std::function<ACState()> GetCurrentACState;
+	std::function<void(bool)> SetACStateFromMonitorDevice;
 	String CreateUrl(const String &s) const;
 	bool GetServerArgBoolValue(const String &argName, ACCapabilities capability = ACCapabilities::None);
 	void ProcessHTTPACView();
 	std::function<void(const ACState &)> UpdateACState;
 
 	void PopulateHTMLSetupFromTemplate(const String& htmlTemplate, const Util::StringMap &map);
-	WebServer(WiFiManagerPtr_t wifiManager, int port, const char *appKey, std::unique_ptr<DeviceSettings> deviceSettings, std::function<void (const ACState&)> updateACState, std::function<ACState()> getCurrentACState, ACCapabilities acCapabilities);
+	WebServer(WiFiManagerPtr_t wifiManager, int port, const char *appKey, std::unique_ptr<DeviceSettings> deviceSettings, std::function<void (const ACState&)> updateACState, std::function<ACState()> getCurrentACState, std::function<void(bool)> setCACStateFromMonitorDevice, ACCapabilities acCapabilities);
 	void HandleMain();
 	void ProcessHTTPSetupRequest();
 	void HandleSendAPScript();
@@ -70,6 +71,8 @@ private:
 	void HandleSetConfiguration();
 	void HandleResetAccessPoint();
 	void HandleError();
+	void HandleUpdateACStateFromMonitorDevice();
+
 	bool CheckSecurity();
 	void SendACState();
 	static bool GetSimpleJsonEntry(const String& text, String& variable, String& value, int& lastIndex);
@@ -80,6 +83,7 @@ private:
 	void SetACOnState(bool action);
 	void TurnOn();
 	void TurnOff();
+	
 
 public:
 	template<typename T>

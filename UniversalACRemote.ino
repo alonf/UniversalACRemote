@@ -71,6 +71,11 @@ ACState GetACState()
     return acState;
 }
 
+void SetACStateFromMonitorDevice(bool isACOn)
+{
+    acManager->SetACStateFromMonitorDevice(isACOn);
+}
+
 void SetupWebServer()
 {
     auto deviceSettings = unique_ptr<DeviceSettings>(new DeviceSettings());
@@ -80,7 +85,7 @@ void SetupWebServer()
     deviceSettings->ACNameStr = configurationManger->GetACName();
     deviceSettings->longButtonPeriod = configurationManger->GetLongPeriodButonPressTimesMilliSeconds();
     deviceSettings->veryLongButtonPeriod = configurationManger->GetVeryLongPeriodButonPressTimesMilliSeconds();
-    webServer = WebServer::Create(wifiManager, 80, appKey, move(deviceSettings), UpdateACState, GetACState, acManager->GetCapabilities());
+    webServer = WebServer::Create(wifiManager, 80, appKey, move(deviceSettings), UpdateACState, GetACState, SetACStateFromMonitorDevice, acManager->GetCapabilities());
     webServer->SetWebSiteHeader(String("Welcome to ") + configurationManger->GetACName() + " setup page.");
     webServer->SetUpdateConfiguration([](const DeviceSettings& deviceSettings)
     {

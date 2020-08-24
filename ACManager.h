@@ -70,6 +70,7 @@ public:
 	void OnButtonPressed();
 
     void SendState(ACState acState);
+    void SetACStateFromMonitorDevice(bool isAcOn) { _acController.SetACStateFromMonitorDevice(isAcOn); }
     bool IsPowerOn() const { return _acController.IsPowerOn(); }
     ACMode GetACMode() const { return _acController.GetACMode(); }
     ACFan GetACfan() const { return _acController.GetACfan(); }

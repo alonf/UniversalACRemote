@@ -42,6 +42,7 @@ public:
 
     ACCapabilities GetCapabilities() const { return TRealACController::GetCapabilities(); }
     void Initialize() { _acController.Initialize(); }
+    void SetACStateFromMonitorDevice(bool isAcOn) { _state.isPowerOn = isAcOn; }
 };
 
 #endif //ACCONTROLLER

@@ -9,12 +9,13 @@
 
 using namespace std;
 ///*static*/ char WebServer::_setupHtmlBuffer[3072]; //for setup html result
-WebServer::WebServer(WiFiManagerPtr_t wifiManager, int port, const char *appKey, unique_ptr<DeviceSettings> deviceSettings, function<void(const ACState&)> updateACState, function<ACState ()> getCurrentACState, ACCapabilities acCapabilities) :
+WebServer::WebServer(WiFiManagerPtr_t wifiManager, int port, const char *appKey, unique_ptr<DeviceSettings> deviceSettings, function<void(const ACState&)> updateACState, function<ACState ()> getCurrentACState, std::function<void(bool)> setCACStateFromMonitorDevice, ACCapabilities acCapabilities) :
 	_deviceSettings(move(deviceSettings)),
 	_server(port), 
 	_authorizedUrl(String("/") + appKey),
     _acCapabilities(acCapabilities),
 	GetCurrentACState(std::move(getCurrentACState)),
+	SetACStateFromMonitorDevice(std::move(setCACStateFromMonitorDevice)),
     UpdateACState(std::move(updateACState))
 {
 	_server.on("/", [this]() { HandleError(); });
@@ -33,6 +34,7 @@ WebServer::WebServer(WiFiManagerPtr_t wifiManager, int port, const char *appKey,
 	_server.on((_authorizedUrl + "/setacstate").c_str(), HTTP_POST, [this]() { SetACState(); });
 	_server.on((_authorizedUrl + "/turnon").c_str(), HTTP_POST, [this]() { TurnOn(); });
 	_server.on((_authorizedUrl + "/turnoff").c_str(), HTTP_POST, [this]() { TurnOff(); });
+	_server.on((_authorizedUrl + "/updateacstatefrommonitordevice").c_str(), HTTP_POST, [this]() { HandleUpdateACStateFromMonitorDevice(); });
 	_server.on((_authorizedUrl + "/getacstate").c_str(), HTTP_GET, [this]() { GetACState(); });
 	_server.on((_authorizedUrl + "/getcurrenttemperature").c_str(), HTTP_GET, [this]() { HandleGetCurrentTemperature(); });
 	_server.onNotFound([this]() { HandleError(); });
@@ -53,6 +55,35 @@ void WebServer::HandleError()
 	_server.send(401,
 		"text/plain",
 		"Unauthorized");
+}
+
+void WebServer::HandleUpdateACStateFromMonitorDevice()
+{
+	if (!CheckSecurity())
+		return;
+
+	/*
+	//Debug request parameters:
+	
+    for (int i = 0; i < _server.args();++i)
+		Serial.printf("key=%s, value=%s\n",_server.argName(i).c_str(), _server.arg(i).c_str());
+	*/
+
+	if (!_server.hasArg("IsACOn"))
+	{
+		_server.send(401,
+			"text/plain",
+			"Parameter not valid (Missing IsACOn)");
+		return;
+	}
+
+    const auto isAcOn = _server.arg("IsACOn").equalsIgnoreCase("true");
+
+	if (SetACStateFromMonitorDevice)
+	{
+		SetACStateFromMonitorDevice(isAcOn);
+	}
+	_server.send(200, "application/json", R"({"result":"ok"})");
 }
 
 bool WebServer::CheckSecurity()
