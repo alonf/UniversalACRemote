@@ -33,7 +33,11 @@ public:
     {
         _irsend.begin();
         Serial.println("ACTadiranTac290Controller begins...");
-    };
+    }
+
+    void SetACStateFromMonitorDevice(bool isAcOn) //no need to know. this AC has different code for on and off
+    {
+    }
 
     void SendAc(const ACState &state) const
     {

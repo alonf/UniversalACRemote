@@ -38,7 +38,12 @@ public:
     {
         _irsend.begin();
         Serial.println("ACElectraController begins...");
-    };
+    }
+
+    void SetACStateFromMonitorDevice(bool isAcOn)
+    {
+        _powerState = isAcOn;
+    }
 
     void SendAc(ACState state)
     {

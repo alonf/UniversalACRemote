@@ -78,6 +78,7 @@ void WebServer::HandleUpdateACStateFromMonitorDevice()
 	}
 
     const auto isAcOn = _server.arg("IsACOn").equalsIgnoreCase("true");
+	Serial.printf("Received AC state: %s", isAcOn ? "True" : "False");
 
 	if (SetACStateFromMonitorDevice)
 	{
